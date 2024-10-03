@@ -9,3 +9,10 @@ target/
 *.iws
 *.iml
 *.ipr
+
+
+/*
+
+!pom.xml
+
+!src/
