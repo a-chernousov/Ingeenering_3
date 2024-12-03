@@ -6,7 +6,7 @@ import javafx.scene.paint.Color;
 public class Line extends Shape {
 
     public Line() {
-        super(0, 0, 5, Color.BLACK);
+        super(250, 200, 5, Color.BLACK);
     }
 
     @Override

@@ -1,16 +1,12 @@
 package com.example.factorymethod;
 
-import com.example.factorymethod.resos.Momento;
-import com.example.factorymethod.resos.Shape;
-import com.example.factorymethod.resos.ShapeFactory;
-import com.example.factorymethod.resos.MemoSelect;
+import com.example.factorymethod.resos.*;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
-import javafx.event.EventHandler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +20,6 @@ public class HelloController {
     private MemoSelect memoSelect = new MemoSelect();
     private boolean isDragging = false;
     private boolean isMoving = false;
-    private int clickCount = 0;
     private final int COORD_DRAW = 20;
 
     @FXML
@@ -47,33 +42,9 @@ public class HelloController {
         gc = myCanvas.getGraphicsContext2D();
 
         // Добавляем обработчики событий мыши
-        myCanvas.setOnMousePressed(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                handleMousePressed(event);
-            }
-        });
-
-        myCanvas.setOnMouseDragged(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                handleMouseDragged(event);
-            }
-        });
-
-        myCanvas.setOnMouseReleased(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                handleMouseReleased(event);
-            }
-        });
-
-        myCanvas.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                handleMouseClicked(event);
-            }
-        });
+        myCanvas.setOnMousePressed(this::handleMousePressed);
+        myCanvas.setOnMouseDragged(this::handleMouseDragged);
+        myCanvas.setOnMouseReleased(this::handleMouseReleased);
     }
 
     private int numberOfSides;
@@ -87,10 +58,21 @@ public class HelloController {
             ShapeFactory shapeFactory = new ShapeFactory();
             Shape shape1 = shapeFactory.createShape(numberOfSides);
             shapes.add(shape1);
+            memoSelect.push(new Momento(shape1)); // Сохраняем состояние после рисования
             gc.clearRect(0, 0, 500, 400);
             for (Shape shape : shapes) {
                 shape.draw(gc);
             }
+        }
+    }
+
+    @FXML
+    protected void onUndo() {
+        Momento lastMomento = memoSelect.pop();
+        if (lastMomento != null) {
+            Shape lastShape = lastMomento.getState();
+            shapes.remove(lastShape);
+            redrawCanvas();
         }
     }
 
@@ -118,11 +100,12 @@ public class HelloController {
             lastX = mouseX;
             lastY = mouseY;
             moveCounter = 0;
+            isMoving = true; // Начинаем движение
         }
     }
 
     private void handleMouseDragged(MouseEvent event) {
-        if (selectedShape != null && isMoving) {
+        if (selectedShape != null) {
             double newX = event.getX() - offsetX;
             double newY = event.getY() - offsetY;
             selectedShape.relocate(newX, newY);
@@ -137,6 +120,7 @@ public class HelloController {
                 newShape.setX(lastX - offsetX);
                 newShape.setY(lastY - offsetY);
                 shapes.add(newShape);
+                memoSelect.push(new Momento(newShape)); // Сохраняем состояние после перетаскивания
 
                 // Обновляем последние координаты
                 lastX = newX;
@@ -150,23 +134,11 @@ public class HelloController {
 
     private void handleMouseReleased(MouseEvent event) {
         isDragging = false;
-    }
+        isMoving = false; // Останавливаем движение
 
-    private void handleMouseClicked(MouseEvent event) {
-        double mouseX = event.getX();
-        double mouseY = event.getY();
-
-        // Проверяем, находится ли мышь над фигурой
-        selectedShape = findShapeAtPosition(mouseX, mouseY);
+        // Сохраняем состояние после отпускания мыши
         if (selectedShape != null) {
-            clickCount++;
-            if (clickCount % 2 == 1) {
-                // Первый клик: начинаем движение
-                isMoving = true;
-            } else {
-                // Второй клик: останавливаем движение
-                isMoving = false;
-            }
+            memoSelect.push(new Momento(selectedShape));
         }
     }
 

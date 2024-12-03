@@ -1,20 +1,23 @@
 package com.example.factorymethod.resos;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.Supplier;
+
 public class ShapeFactory {
+    private static final Map<Integer, Supplier<Shape>> shapeCreators = new HashMap<>();
+
+    static {
+        shapeCreators.put(5, () -> new Polygon(5));
+        shapeCreators.put(4, () -> new Square(100, 100, 50, 2, javafx.scene.paint.Color.BLACK));
+        shapeCreators.put(3, Triangle::new);
+        shapeCreators.put(2, Angle::new);
+        shapeCreators.put(1, Line::new);
+        shapeCreators.put(0, Circle::new);
+    }
+
     public Shape createShape(int numberOfSides) {
-        if (numberOfSides >= 5) {
-            return new Polygon(numberOfSides);
-        } else if (numberOfSides == 4) {
-            return new Square(100, 100, 50, 2, javafx.scene.paint.Color.BLACK);
-        } else if (numberOfSides == 3) {
-            return new Triangle();
-        } else if (numberOfSides == 2) {
-            return new Angle();
-        } else if (numberOfSides == 1) {
-            return new Line();
-        } else if (numberOfSides == 0) {
-            return new Circle();
-        }
-        return new DefaultShape();
+        Supplier<Shape> shapeCreator = shapeCreators.getOrDefault(numberOfSides, DefaultShape::new);
+        return shapeCreator.get();
     }
 }

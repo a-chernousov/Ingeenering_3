@@ -2,21 +2,20 @@ package com.example.factorymethod.resos;
 
 import java.util.ArrayDeque;
 import java.util.Queue;
+import java.util.Stack;
 
 public class MemoSelect {
 
-    private Queue<Momento> mementoList = new ArrayDeque<Momento>();
-
+    private Stack<Momento> mementoStack = new Stack<>();
 
     public void push(Momento state) {
-
-        mementoList.add(state);
-
+        mementoStack.push(state);
     }
 
-    public Momento poll() {
-
-        return mementoList.poll();
-
+    public Momento pop() {
+        if (!mementoStack.isEmpty()) {
+            return mementoStack.pop();
+        }
+        return null;
     }
 }

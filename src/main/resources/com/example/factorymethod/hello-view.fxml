@@ -3,27 +3,25 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.VBox?>
-
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.canvas.Canvas?>
 <?import javafx.scene.layout.HBox?>
+
 <VBox alignment="TOP_CENTER" spacing="10.0" xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.example.factorymethod.HelloController">
-  <padding>
-    <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
-  </padding>
+    <padding>
+        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
+    </padding>
 
     <FlowPane hgap="10">
         <Label text="Число сторон: "/>
         <TextField fx:id="TextDraw" maxWidth="50" style="-fx-border-color: black;"/>
         <Button onAction="#onClickDraw">Отрисовать</Button>
+        <Button onAction="#onUndo">Отменить</Button> <!-- Добавляем новую кнопку -->
     </FlowPane>
     <HBox style="-fx-border-color: black;" maxWidth="280" minHeight="230">
         <Canvas fx:id="myCanvas" />
     </HBox>
 </VBox>
-
-
-
