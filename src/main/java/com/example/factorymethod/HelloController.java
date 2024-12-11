@@ -1,15 +1,17 @@
 package com.example.factorymethod;
 
 import com.example.factorymethod.resos.*;
+import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.TextField;
+import javafx.scene.control.ComboBox;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class HelloController {
 
@@ -26,7 +28,7 @@ public class HelloController {
     private Canvas myCanvas;
 
     @FXML
-    private TextField TextDraw;
+    private ComboBox<String> shapeSelector;
 
     private GraphicsContext gc;
 
@@ -45,23 +47,25 @@ public class HelloController {
         myCanvas.setOnMousePressed(this::handleMousePressed);
         myCanvas.setOnMouseDragged(this::handleMouseDragged);
         myCanvas.setOnMouseReleased(this::handleMouseReleased);
+
+        // Инициализация ComboBox
+        shapeSelector.setItems(FXCollections.observableArrayList(
+                "Круг", "Треугольник", "Прямоугольник", "Линия", "Угол"
+        ));
     }
 
-    private int numberOfSides;
     @FXML
     protected void onClickDraw() {
-        String text = TextDraw.getText();
-        if (text == null || text.trim().isEmpty() || isNotInteger(text)) {
-            TextDraw.setText("NFE");
+        String selectedShape = shapeSelector.getValue();
+        if (selectedShape == null || selectedShape.trim().isEmpty()) {
+            System.out.println("Выберите фигуру");
         } else {
-            numberOfSides = Integer.parseInt(text);
-            ShapeFactory shapeFactory = new ShapeFactory();
-            Shape shape1 = shapeFactory.createShape(numberOfSides);
-            shapes.add(shape1);
-            memoSelect.push(new Momento(shape1)); // Сохраняем состояние после рисования
-            gc.clearRect(0, 0, 500, 400);
-            for (Shape shape : shapes) {
-                shape.draw(gc);
+            Shape shape = createShapeFromSelection(selectedShape);
+            shapes.add(shape);
+            memoSelect.push(new Momento(shape)); // Сохраняем состояние после рисования
+            gc.clearRect(0, 0, myCanvas.getWidth(), myCanvas.getHeight());
+            for (Shape s : shapes) {
+                s.draw(gc);
             }
         }
     }
@@ -76,13 +80,33 @@ public class HelloController {
         }
     }
 
-    public static boolean isNotInteger(String str) {
-        try {
-            int num = Integer.parseInt(str);
-            return false;
-        } catch (NumberFormatException e) {
-            // NumberFormatException
-            return true;
+    private Shape createShapeFromSelection(String selectedShape) {
+        Random random = new Random();
+        double x = random.nextDouble() * (myCanvas.getWidth() - 100); // случайная координата X
+        double y = random.nextDouble() * (myCanvas.getHeight() - 100); // случайная координата Y
+
+        switch (selectedShape) {
+            case "Круг":
+                Circle circle = new Circle();
+                circle.relocate(x, y);
+                return circle;
+            case "Треугольник":
+                Triangle triangle = new Triangle();
+                triangle.relocate(x, y);
+                return triangle;
+            case "Прямоугольник":
+                Square square = new Square(x, y, 100, 2, Color.BLACK);
+                return square;
+            case "Линия":
+                Line line = new Line();
+                line.relocate(x, y);
+                return line;
+            case "Угол":
+                Angle angle = new Angle();
+                angle.relocate(x, y);
+                return angle;
+            default:
+                return new DefaultShape();
         }
     }
 
@@ -115,8 +139,7 @@ public class HelloController {
             double deltaY = Math.abs(newY - lastY);
             if (deltaX >= COORD_DRAW || deltaY >= COORD_DRAW) {
                 // Создаем новую фигуру на месте предыдущей
-                ShapeFactory shapeFactory = new ShapeFactory();
-                Shape newShape = shapeFactory.createShape(numberOfSides);
+                Shape newShape = createShapeFromSelection(shapeSelector.getValue());
                 newShape.setX(lastX - offsetX);
                 newShape.setY(lastY - offsetY);
                 shapes.add(newShape);
