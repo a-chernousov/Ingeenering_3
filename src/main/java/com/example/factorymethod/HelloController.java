@@ -103,6 +103,10 @@ public class HelloController {
             for (Shape s : shapes) {
                 s.draw(gc);
             }
+
+            // Обновляем ссылку на выбранную фигуру
+            this.selectedShape = shape;
+            this.selectedShape.setDraggable(true); // Устанавливаем флаг, что фигура перетаскиваема
         }
     }
 
@@ -112,42 +116,51 @@ public class HelloController {
         Momento lastMomento = memoSelect.pop();
         if (lastMomento != null) {
             Shape lastShape = lastMomento.getState();
-            shapes.remove(lastShape);
-            redrawCanvas();
+            if (lastShape.isDraggable()) { // Удаляем только перетаскиваемые фигуры
+                shapes.remove(lastShape);
+            } else {
+                // Если фигура не перетаскиваема, восстанавливаем её состояние
+                shapes.add(lastShape);
+            }
+            redrawCanvas(); // Перерисовываем холст
+
+            // Активируем последний экземпляр фигуры для перемещения
+            if (!shapes.isEmpty()) {
+                selectedShape = shapes.get(shapes.size() - 1); // Последний элемент в списке
+                selectedShape.setDraggable(true); // Устанавливаем флаг, что фигура перетаскиваема
+            }
         }
     }
-
     private Shape createShapeFromSelection(String selectedShape, Color fillColor) {
         Random random = new Random();
         double x = random.nextDouble() * (myCanvas.getWidth() - 100); // случайная координата X
         double y = random.nextDouble() * (myCanvas.getHeight() - 100); // случайная координата Y
 
+        Shape shape = null;
         switch (selectedShape) {
             case "Круг":
-                Circle circle = new Circle();
-                circle.relocate(x, y);
-                circle.setFillColor(fillColor); // Устанавливаем цвет заливки
-                return circle;
+                shape = new Circle();
+                break;
             case "Треугольник":
-                Triangle triangle = new Triangle();
-                triangle.relocate(x, y);
-                triangle.setFillColor(fillColor); // Устанавливаем цвет заливки
-                return triangle;
+                shape = new Triangle();
+                break;
             case "Прямоугольник":
-                Square square = new Square(x, y, 100, 2, Color.BLACK);
-                square.setFillColor(fillColor); // Устанавливаем цвет заливки
-                return square;
+                shape = new Square(x, y, 100, 2, Color.BLACK);
+                break;
             case "Линия":
-                Line line = new Line();
-                line.relocate(x, y);
-                return line;
+                shape = new Line();
+                break;
             case "Угол":
-                Angle angle = new Angle();
-                angle.relocate(x, y);
-                return angle;
+                shape = new Angle();
+                break;
             default:
-                return new DefaultShape();
+                shape = new DefaultShape();
         }
+
+        shape.relocate(x, y);
+        shape.setFillColor(fillColor); // Устанавливаем цвет заливки
+        shape.setDraggable(true); // Устанавливаем флаг, что фигура перетаскиваема
+        return shape;
     }
 
     private void handleMousePressed(MouseEvent event) {
