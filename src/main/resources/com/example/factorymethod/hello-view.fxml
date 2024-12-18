@@ -1,33 +1,47 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.layout.FlowPane?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.canvas.Canvas?>
-<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.control.ComboBox?>
-<?import javafx.collections.FXCollections?>
-
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Slider?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.canvas.Canvas?>
 <?import javafx.scene.control.ColorPicker?>
-<VBox alignment="TOP_CENTER" spacing="10.0" xmlns:fx="http://javafx.com/fxml"
-      fx:controller="com.example.factorymethod.HelloController">
-    <padding>
-        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
-    </padding>
 
-    <FlowPane hgap="10">
-        <Label text="Выберите фигуру: "/>
-        <ComboBox fx:id="shapeSelector" maxWidth="150"/>
-        <Button onAction="#onClickDraw" text="Отрисовать"/>
-        <Button onAction="#onUndo" text="Отменить"/>
-        <ColorPicker fx:id="colorPicker" onAction="#changeShapeColor"/>
-        <Button fx:id="changeSizeButton" text="Изменить размер" onAction="#changeShapeSize"/>
-        <Button fx:id="changeStrokeButton" text="Изменить контур" onAction="#changeShapeStroke"/>
-    </FlowPane>
-    <HBox style="-fx-border-color: black;" maxWidth="280" minHeight="230">
-        <Canvas fx:id="myCanvas" />
-    </HBox>
-</VBox>
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.factorymethod.HelloController">
+    <!-- Левая панель с ColorPicker и слайдерами -->
+    <left>
+        <VBox spacing="10">
+            <padding>
+                <Insets top="10" right="10" bottom="10" left="10"/> <!-- Исправлено: явно создаём объект Insets -->
+            </padding>
+            <Label text="Выберите цвет:"/>
+            <ColorPicker fx:id="colorPicker"/>
+
+            <Label text="Размер фигуры:"/>
+            <Slider fx:id="sizeSlider" min="10" max="200" value="100" showTickLabels="true" showTickMarks="true" majorTickUnit="50" minorTickCount="10"/>
+
+            <Label text="Толщина контура:"/>
+            <Slider fx:id="strokeSlider" min="1" max="10" value="2" showTickLabels="true" showTickMarks="true" majorTickUnit="5" minorTickCount="1"/>
+        </VBox>
+    </left>
+
+    <!-- Центральная панель с холстом -->
+    <center>
+        <Canvas fx:id="myCanvas" width="500" height="400" style="-fx-border-color: gray; -fx-border-width: 2px;"/>
+    </center>
+
+    <!-- Нижняя панель с ComboBox и кнопками -->
+    <bottom>
+        <VBox spacing="10">
+            <padding>
+                <Insets top="10" right="10" bottom="10" left="10"/> <!-- Исправлено: явно создаём объект Insets -->
+            </padding>
+            <ComboBox fx:id="shapeSelector" promptText="Выберите фигуру"/>
+            <Button text="Нарисовать" onAction="#onClickDraw"/>
+            <Button text="Отменить" onAction="#onUndo"/>
+        </VBox>
+    </bottom>
+</BorderPane>

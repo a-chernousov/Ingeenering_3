@@ -10,6 +10,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.control.ColorPicker;
+import javafx.scene.control.Slider;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -45,6 +46,13 @@ public class HelloController {
     @FXML
     private Button changeStrokeButton;
 
+    @FXML
+    private Slider sizeSlider;
+
+    @FXML
+    private Slider strokeSlider;
+
+
     // Переменные для отслеживания перемещения
     private double lastX, lastY;
     private int moveCounter = 0;
@@ -66,13 +74,16 @@ public class HelloController {
         myCanvas.setOnMouseReleased(this::handleMouseReleased);
         colorPicker.setOnAction(event -> changeShapeColor());
 
-        // Инициализация кнопок
-        changeSizeButton.setOnAction(event -> changeShapeSize());
-        changeStrokeButton.setOnAction(event -> changeShapeStroke());
         // Инициализация ComboBox
         shapeSelector.setItems(FXCollections.observableArrayList(
                 "Круг", "Треугольник", "Прямоугольник", "Линия", "Угол"
         ));
+
+        colorPicker.setOnAction(event -> changeShapeColor());
+
+        // Инициализация слайдеров
+        sizeSlider.valueProperty().addListener((obs, oldVal, newVal) -> changeShapeSize(newVal.doubleValue()));
+        strokeSlider.valueProperty().addListener((obs, oldVal, newVal) -> changeShapeStroke(newVal.doubleValue()));
     }
 
     @FXML
@@ -234,22 +245,22 @@ public class HelloController {
     }
 
     @FXML
-    public void changeShapeSize() {
+    public void changeShapeSize(double newSize) {
         if (selectedShape != null) {
-            double newSize = 150; // Увеличим размер фигуры (можно сделать динамическим)
-            selectedShape.resize(newSize); // Сохраняем новый размер в фигуре
+            selectedShape.resize(newSize); // Устанавливаем новый размер
             redrawCanvas(); // Перерисовываем холст
         }
     }
 
     @FXML
-    public void changeShapeStroke() {
+    public void changeShapeStroke(double newStrokeWidth) {
         if (selectedShape != null) {
-            double newStrokeWidth = 5; // Увеличим толщину контура (можно сделать динамическим)
-            selectedShape.setStrokeWidth(newStrokeWidth); // Сохраняем новую толщину контура в фигуре
+            selectedShape.setStrokeWidth(newStrokeWidth); // Устанавливаем новую толщину контура
             redrawCanvas(); // Перерисовываем холст
         }
     }
+
+
 
 
 }
