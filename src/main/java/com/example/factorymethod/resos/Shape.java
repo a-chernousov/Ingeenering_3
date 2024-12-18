@@ -10,6 +10,7 @@ public class Shape {
     private double strokeWidth;
     private Color stroke;
     private Color fillColor;
+    private boolean isDraggable = true;
 
     public Shape(double x, double y, double strokeWidth, Color strokeColor,  Color fillColor) {
         this.x = x;
@@ -23,6 +24,13 @@ public class Shape {
     }
     public Color getFillColor() {
         return fillColor;
+    }
+    public boolean isDraggable() {
+        return isDraggable;
+    }
+
+    public void setDraggable(boolean draggable) {
+        isDraggable = draggable;
     }
 
     public void setFillColor(Color fillColor) {

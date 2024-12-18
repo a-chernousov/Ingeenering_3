@@ -145,7 +145,7 @@ public class HelloController {
 
         // Проверяем, находится ли мышь над фигурой
         selectedShape = findShapeAtPosition(mouseX, mouseY);
-        if (selectedShape != null) {
+        if (selectedShape != null && selectedShape.isDraggable()) { // Проверяем, можно ли перетаскивать фигуру
             offsetX = mouseX - selectedShape.getX();
             offsetY = mouseY - selectedShape.getY();
             // Сохраняем текущее состояние фигуры
@@ -169,7 +169,7 @@ public class HelloController {
 
 
     private void handleMouseDragged(MouseEvent event) {
-        if (selectedShape != null) {
+        if (selectedShape != null && selectedShape.isDraggable()) { // Проверяем, можно ли перетаскивать фигуру
             double newX = event.getX() - offsetX;
             double newY = event.getY() - offsetY;
 
@@ -179,6 +179,7 @@ public class HelloController {
                 // Создаём копию фигуры с текущими свойствами
                 Shape clonedShape = selectedShape.cloneShape();
                 clonedShape.relocate(lastX - offsetX, lastY - offsetY); // Устанавливаем координаты копии
+                clonedShape.setDraggable(false); // Устанавливаем флаг, что копия не перетаскиваема
                 shapes.add(clonedShape); // Добавляем копию в список фигур
                 memoSelect.push(new Momento(clonedShape)); // Сохраняем состояние копии
 
