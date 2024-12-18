@@ -7,7 +7,7 @@ public class Polygon extends Shape {
     private final int count;
 
     public Polygon(int count) {
-        super(125, 125, 2, Color.BLACK);
+        super(125, 125, 2, Color.BLACK, Color.BISQUE);
         this.count = count;
     }
 

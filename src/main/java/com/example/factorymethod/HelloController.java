@@ -5,10 +5,11 @@ import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
-
+import javafx.scene.control.ColorPicker;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -32,9 +33,25 @@ public class HelloController {
 
     private GraphicsContext gc;
 
+    @FXML
+    private Button changeColorButton;
+
+    @FXML
+    private ColorPicker colorPicker;
+
+    @FXML
+    private Button changeSizeButton;
+
+    @FXML
+    private Button changeStrokeButton;
+
     // Переменные для отслеживания перемещения
     private double lastX, lastY;
     private int moveCounter = 0;
+
+    private long lastDrawTime = 0;
+    private static final long DRAW_DELAY = 20; // Задержка в миллисекундах (например, 200 мс)
+
 
     @FXML
     public void initialize() {
@@ -47,7 +64,11 @@ public class HelloController {
         myCanvas.setOnMousePressed(this::handleMousePressed);
         myCanvas.setOnMouseDragged(this::handleMouseDragged);
         myCanvas.setOnMouseReleased(this::handleMouseReleased);
+        colorPicker.setOnAction(event -> changeShapeColor());
 
+        // Инициализация кнопок
+        changeSizeButton.setOnAction(event -> changeShapeSize());
+        changeStrokeButton.setOnAction(event -> changeShapeStroke());
         // Инициализация ComboBox
         shapeSelector.setItems(FXCollections.observableArrayList(
                 "Круг", "Треугольник", "Прямоугольник", "Линия", "Угол"
@@ -60,7 +81,11 @@ public class HelloController {
         if (selectedShape == null || selectedShape.trim().isEmpty()) {
             System.out.println("Выберите фигуру");
         } else {
-            Shape shape = createShapeFromSelection(selectedShape);
+            // Получаем цвет из ColorPicker
+            Color fillColor = colorPicker.getValue();
+
+            // Создаём фигуру с выбранным цветом
+            Shape shape = createShapeFromSelection(selectedShape, fillColor);
             shapes.add(shape);
             memoSelect.push(new Momento(shape)); // Сохраняем состояние после рисования
             gc.clearRect(0, 0, myCanvas.getWidth(), myCanvas.getHeight());
@@ -69,6 +94,7 @@ public class HelloController {
             }
         }
     }
+
 
     @FXML
     protected void onUndo() {
@@ -80,7 +106,7 @@ public class HelloController {
         }
     }
 
-    private Shape createShapeFromSelection(String selectedShape) {
+    private Shape createShapeFromSelection(String selectedShape, Color fillColor) {
         Random random = new Random();
         double x = random.nextDouble() * (myCanvas.getWidth() - 100); // случайная координата X
         double y = random.nextDouble() * (myCanvas.getHeight() - 100); // случайная координата Y
@@ -89,13 +115,16 @@ public class HelloController {
             case "Круг":
                 Circle circle = new Circle();
                 circle.relocate(x, y);
+                circle.setFillColor(fillColor); // Устанавливаем цвет заливки
                 return circle;
             case "Треугольник":
                 Triangle triangle = new Triangle();
                 triangle.relocate(x, y);
+                triangle.setFillColor(fillColor); // Устанавливаем цвет заливки
                 return triangle;
             case "Прямоугольник":
                 Square square = new Square(x, y, 100, 2, Color.BLACK);
+                square.setFillColor(fillColor); // Устанавливаем цвет заливки
                 return square;
             case "Линия":
                 Line line = new Line();
@@ -128,30 +157,43 @@ public class HelloController {
         }
     }
 
+
+    @FXML
+    public void onChangeColor() {
+        if (selectedShape != null) {
+            Color newColor = Color.RED; // или любой другой цвет
+            selectedShape = new ColorDecorator(selectedShape, newColor);
+            redrawCanvas();
+        }
+    }
+
+
     private void handleMouseDragged(MouseEvent event) {
         if (selectedShape != null) {
             double newX = event.getX() - offsetX;
             double newY = event.getY() - offsetY;
+
+            // Проверяем задержку перед созданием копии
+            long currentTime = System.currentTimeMillis();
+            if (currentTime - lastDrawTime > DRAW_DELAY) {
+                // Создаём копию фигуры с текущими свойствами
+                Shape clonedShape = selectedShape.cloneShape();
+                clonedShape.relocate(lastX - offsetX, lastY - offsetY); // Устанавливаем координаты копии
+                shapes.add(clonedShape); // Добавляем копию в список фигур
+                memoSelect.push(new Momento(clonedShape)); // Сохраняем состояние копии
+
+                lastDrawTime = currentTime; // Обновляем время последнего рисования
+            }
+
+            // Обновляем координаты выбранной фигуры
             selectedShape.relocate(newX, newY);
 
-            // Проверяем, переместилась ли фигура на 10 координат
-            double deltaX = Math.abs(newX - lastX);
-            double deltaY = Math.abs(newY - lastY);
-            if (deltaX >= COORD_DRAW || deltaY >= COORD_DRAW) {
-                // Создаем новую фигуру на месте предыдущей
-                Shape newShape = createShapeFromSelection(shapeSelector.getValue());
-                newShape.setX(lastX - offsetX);
-                newShape.setY(lastY - offsetY);
-                shapes.add(newShape);
-                memoSelect.push(new Momento(newShape)); // Сохраняем состояние после перетаскивания
+            // Обновляем последние координаты
+            lastX = newX;
+            lastY = newY;
 
-                // Обновляем последние координаты
-                lastX = newX;
-                lastY = newY;
-
-                // Перерисовываем канвас
-                redrawCanvas();
-            }
+            // Перерисовываем холст
+            redrawCanvas();
         }
     }
 
@@ -175,9 +217,38 @@ public class HelloController {
     }
 
     private void redrawCanvas() {
-        gc.clearRect(0, 0, myCanvas.getWidth(), myCanvas.getHeight());
+        gc.clearRect(0, 0, myCanvas.getWidth(), myCanvas.getHeight()); // Очищаем холст
         for (Shape shape : shapes) {
-            shape.draw(gc);
+            shape.draw(gc); // Перерисовываем каждую фигуру
         }
     }
+
+    @FXML
+    public void changeShapeColor() {
+        if (selectedShape != null) {
+            Color newColor = colorPicker.getValue(); // Получаем выбранный цвет
+            selectedShape.setFillColor(newColor); // Устанавливаем новый цвет заливки
+            redrawCanvas(); // Перерисовываем холст
+        }
+    }
+
+    @FXML
+    public void changeShapeSize() {
+        if (selectedShape != null) {
+            double newSize = 150; // Увеличим размер фигуры (можно сделать динамическим)
+            selectedShape.resize(newSize); // Сохраняем новый размер в фигуре
+            redrawCanvas(); // Перерисовываем холст
+        }
+    }
+
+    @FXML
+    public void changeShapeStroke() {
+        if (selectedShape != null) {
+            double newStrokeWidth = 5; // Увеличим толщину контура (можно сделать динамическим)
+            selectedShape.setStrokeWidth(newStrokeWidth); // Сохраняем новую толщину контура в фигуре
+            redrawCanvas(); // Перерисовываем холст
+        }
+    }
+
+
 }

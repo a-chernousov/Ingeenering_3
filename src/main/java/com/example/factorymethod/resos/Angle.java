@@ -6,7 +6,7 @@ import javafx.scene.paint.Color;
 public class Angle extends Shape {
 
     public Angle() {
-        super(25, 25, 10, Color.GRAY);
+        super(25, 25, 10, Color.GRAY, Color.FIREBRICK);
     }
 
     @Override

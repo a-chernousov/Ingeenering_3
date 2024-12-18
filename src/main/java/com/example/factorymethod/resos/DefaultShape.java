@@ -5,7 +5,7 @@ import javafx.scene.canvas.GraphicsContext;
 public class DefaultShape extends Shape {
 
     public DefaultShape() {
-        super(0, 0, 0, null);
+        super(0, 0, 0, null, null);
     }
 
     @Override

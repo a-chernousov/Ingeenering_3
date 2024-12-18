@@ -9,12 +9,29 @@ public class Shape {
     private double y;
     private double strokeWidth;
     private Color stroke;
+    private Color fillColor;
 
-    public Shape(double x, double y, double strokeWidth, Color strokeColor) {
+    public Shape(double x, double y, double strokeWidth, Color strokeColor,  Color fillColor) {
         this.x = x;
         this.y = y;
         this.strokeWidth = strokeWidth;
         this.stroke = strokeColor;
+        this.fillColor = fillColor;
+    }
+    public void resize(double newSize) {
+        // По умолчанию ничего не делаем
+    }
+    public Color getFillColor() {
+        return fillColor;
+    }
+
+    public void setFillColor(Color fillColor) {
+        this.fillColor = fillColor;
+    }
+
+    public Shape cloneShape() {
+        // Создаём новую фигуру с текущими свойствами
+        return new Shape(getX(), getY(), getStrokeWidth(), getStroke(), getFillColor());
     }
 
     public void draw(GraphicsContext gr) {

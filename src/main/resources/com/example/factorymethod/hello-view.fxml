@@ -11,6 +11,7 @@
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.collections.FXCollections?>
 
+<?import javafx.scene.control.ColorPicker?>
 <VBox alignment="TOP_CENTER" spacing="10.0" xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.example.factorymethod.HelloController">
     <padding>
@@ -19,15 +20,12 @@
 
     <FlowPane hgap="10">
         <Label text="Выберите фигуру: "/>
-        <ComboBox fx:id="shapeSelector" maxWidth="150">
-            <items>
-                <FXCollections fx:factory="observableArrayList">
-
-                </FXCollections>
-            </items>
-        </ComboBox>
-        <Button onAction="#onClickDraw">Отрисовать</Button>
-        <Button onAction="#onUndo">Отменить</Button>
+        <ComboBox fx:id="shapeSelector" maxWidth="150"/>
+        <Button onAction="#onClickDraw" text="Отрисовать"/>
+        <Button onAction="#onUndo" text="Отменить"/>
+        <ColorPicker fx:id="colorPicker" onAction="#changeShapeColor"/>
+        <Button fx:id="changeSizeButton" text="Изменить размер" onAction="#changeShapeSize"/>
+        <Button fx:id="changeStrokeButton" text="Изменить контур" onAction="#changeShapeStroke"/>
     </FlowPane>
     <HBox style="-fx-border-color: black;" maxWidth="280" minHeight="230">
         <Canvas fx:id="myCanvas" />

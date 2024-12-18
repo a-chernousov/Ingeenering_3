@@ -4,18 +4,49 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
 public class Triangle extends Shape {
+    public double getBase() {
+        return base;
+    }
+
+    public double getHeight() {
+        return height;
+    }
+
+    public void setBase(double base) {
+        this.base = base;
+    }
+
+    public void setHeight(double height) {
+        this.height = height;
+    }
+
     private double base = 100;
     private double height = 100;
 
     public Triangle() {
-        super(100, 100, 2, Color.BLACK);
+        super(100, 100, 2, Color.BLACK, Color.GREEN);
     }
-
+    @Override
+    public void resize(double newSize) {
+        this.base = newSize;
+        this.height = newSize;
+    }
+    @Override
+    public Shape cloneShape() {
+        Triangle clone = new Triangle();
+        clone.relocate(getX(), getY());
+        clone.setStroke(getStroke());
+        clone.setStrokeWidth(getStrokeWidth());
+        clone.setFillColor(getFillColor()); // Устанавливаем цвет заливки
+        clone.setBase(getBase()); // Устанавливаем основание
+        clone.setHeight(getHeight()); // Устанавливаем высоту
+        return clone;
+    }
     @Override
     public void draw(GraphicsContext gr) {
-        gr.setFill(Color.ORANGE);
-        gr.setStroke(Color.BLACK);
-        gr.setLineWidth(2);
+        gr.setFill(getFillColor()); // Устанавливаем цвет заливки
+        gr.setStroke(getStroke()); // Устанавливаем цвет контура
+        gr.setLineWidth(getStrokeWidth());
 
         double centerX = getX();
         double centerY = getY();
