@@ -1,5 +1,6 @@
-package com.example.factorymethod.resos;
+package com.example.factorymethod.resos.memento;
 
+import com.example.factorymethod.resos.figure.Shape;
 import javafx.scene.paint.Color;
 
 public class Momento {

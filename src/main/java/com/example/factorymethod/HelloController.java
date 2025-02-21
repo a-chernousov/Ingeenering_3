@@ -1,6 +1,9 @@
 package com.example.factorymethod;
 
-import com.example.factorymethod.resos.*;
+import com.example.factorymethod.resos.decorator.ColorDecorator;
+import com.example.factorymethod.resos.figure.*;
+import com.example.factorymethod.resos.memento.MemoSelect;
+import com.example.factorymethod.resos.memento.Momento;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;

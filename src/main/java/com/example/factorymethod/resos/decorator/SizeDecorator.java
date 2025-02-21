@@ -1,5 +1,6 @@
-package com.example.factorymethod.resos;
+package com.example.factorymethod.resos.decorator;
 
+import com.example.factorymethod.resos.figure.Shape;
 import javafx.scene.canvas.GraphicsContext;
 
 public class SizeDecorator extends ShapeDecorator {

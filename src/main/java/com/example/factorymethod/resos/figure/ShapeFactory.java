@@ -1,4 +1,4 @@
-package com.example.factorymethod.resos;
+package com.example.factorymethod.resos.figure;
 
 import java.util.HashMap;
 import java.util.Map;

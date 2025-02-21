@@ -1,4 +1,4 @@
-package com.example.factorymethod.resos;
+package com.example.factorymethod.resos.figure;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
