@@ -29,7 +29,7 @@ public class Circle extends Shape {
 
         double centerX = getX();
         double centerY = getY();
-        double radius = 50;
+        double radius = getRadius(); // Используем текущий радиус
 
         gr.fillOval(centerX - radius, centerY - radius, radius * 2, radius * 2);
         gr.strokeOval(centerX - radius, centerY - radius, radius * 2, radius * 2);
@@ -50,7 +50,7 @@ public class Circle extends Shape {
     public boolean contains(double x, double y) {
         double centerX = getX();
         double centerY = getY();
-        double radius = 50;
+        double radius = getRadius(); // Используем текущий радиус
 
         return Math.sqrt((x - centerX) * (x - centerX) + (y - centerY) * (y - centerY)) <= radius;
     }

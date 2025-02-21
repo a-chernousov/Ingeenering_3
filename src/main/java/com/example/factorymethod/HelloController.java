@@ -105,7 +105,7 @@ public class HelloController {
             }
 
             // Обновляем ссылку на выбранную фигуру
-            this.selectedShape = shape;
+            this.selectedShape = shape; // Устанавливаем новую фигуру как выбранную
             this.selectedShape.setDraggable(true); // Устанавливаем флаг, что фигура перетаскиваема
         }
     }
@@ -116,12 +116,13 @@ public class HelloController {
         Momento lastMomento = memoSelect.pop();
         if (lastMomento != null) {
             Shape lastShape = lastMomento.getState();
-            if (lastShape.isDraggable()) { // Удаляем только перетаскиваемые фигуры
+
+            // Проверяем, существует ли фигура в списке shapes
+            if (shapes.contains(lastShape)) {
+                // Если фигура существует, удаляем её
                 shapes.remove(lastShape);
-            } else {
-                // Если фигура не перетаскиваема, восстанавливаем её состояние
-                shapes.add(lastShape);
             }
+
             redrawCanvas(); // Перерисовываем холст
 
             // Активируем последний экземпляр фигуры для перемещения
@@ -131,6 +132,7 @@ public class HelloController {
             }
         }
     }
+
     private Shape createShapeFromSelection(String selectedShape, Color fillColor) {
         Random random = new Random();
         double x = random.nextDouble() * (myCanvas.getWidth() - 100); // случайная координата X
@@ -168,11 +170,20 @@ public class HelloController {
         double mouseY = event.getY();
 
         // Проверяем, находится ли мышь над фигурой
-        selectedShape = findShapeAtPosition(mouseX, mouseY);
-        if (selectedShape != null && selectedShape.isDraggable()) { // Проверяем, можно ли перетаскивать фигуру
-            offsetX = mouseX - selectedShape.getX();
-            offsetY = mouseY - selectedShape.getY();
-            // Сохраняем текущее состояние фигуры
+        Shape shapeUnderMouse = findShapeAtPosition(mouseX, mouseY);
+        if (shapeUnderMouse != null && shapeUnderMouse.isDraggable()) {
+            // Если фигура под мышью уже выбрана, то обновляем смещение
+            if (shapeUnderMouse == selectedShape) {
+                offsetX = mouseX - selectedShape.getX();
+                offsetY = mouseY - selectedShape.getY();
+            } else {
+                // Если фигура под мышью новая, то обновляем selectedShape
+                selectedShape = shapeUnderMouse;
+                offsetX = mouseX - selectedShape.getX();
+                offsetY = mouseY - selectedShape.getY();
+            }
+
+            // Сохраняем состояние фигуры
             memoSelect.push(new Momento(selectedShape));
             lastX = mouseX;
             lastY = mouseY;
@@ -193,16 +204,19 @@ public class HelloController {
 
 
     private void handleMouseDragged(MouseEvent event) {
-        if (selectedShape != null && selectedShape.isDraggable()) { // Проверяем, можно ли перетаскивать фигуру
-            double newX = event.getX() - offsetX;
-            double newY = event.getY() - offsetY;
+        if (selectedShape != null && selectedShape.isDraggable()) {
+            double newX = event.getX() - offsetX; // Новое положение X
+            double newY = event.getY() - offsetY; // Новое положение Y
 
             // Проверяем задержку перед созданием копии
             long currentTime = System.currentTimeMillis();
             if (currentTime - lastDrawTime > DRAW_DELAY) {
                 // Создаём копию фигуры с текущими свойствами
                 Shape clonedShape = selectedShape.cloneShape();
-                clonedShape.relocate(lastX - offsetX, lastY - offsetY); // Устанавливаем координаты копии
+
+                // Устанавливаем координаты копии, учитывая смещение
+                clonedShape.relocate(newX, newY);
+
                 clonedShape.setDraggable(false); // Устанавливаем флаг, что копия не перетаскиваема
                 shapes.add(clonedShape); // Добавляем копию в список фигур
                 memoSelect.push(new Momento(clonedShape)); // Сохраняем состояние копии
@@ -212,10 +226,6 @@ public class HelloController {
 
             // Обновляем координаты выбранной фигуры
             selectedShape.relocate(newX, newY);
-
-            // Обновляем последние координаты
-            lastX = newX;
-            lastY = newY;
 
             // Перерисовываем холст
             redrawCanvas();
