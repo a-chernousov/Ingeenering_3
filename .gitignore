@@ -14,5 +14,5 @@ target/
 /*
 
 !pom.xml
-
+!.travis.yml
 !src/
