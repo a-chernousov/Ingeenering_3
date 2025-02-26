@@ -5,24 +5,13 @@ import javafx.scene.paint.Color;
 
 public class Line extends Shape {
     private double length = 100;
+
+//    public Line() {
+//        super(250, 200, 5, Color.BLACK, Color.TEAL);
+//    }
+
     public Line() {
-        super(250, 200, 5, Color.BLACK, Color.TEAL);
-    }
-    @Override
-    public void resize(double newSize) {
-        this.length = newSize; // Изменяем длину линии
-    }
-    @Override
-    public void draw(GraphicsContext gr) {
-        gr.setStroke(getStroke()); // Устанавливаем цвет контура
-        gr.setLineWidth(getStrokeWidth());
-
-        double startX = getX();
-        double startY = getY();
-        double endX = startX + length;
-        double endY = startY;
-
-        gr.strokeLine(startX, startY, endX, endY);
+        super();
     }
 
     public double getLength() {
@@ -34,10 +23,28 @@ public class Line extends Shape {
     }
 
     @Override
+    public void resize(double newSize) {
+        this.length = newSize; // Изменяем длину линии
+    }
+
+    @Override
+    public void draw(GraphicsContext gr) {
+        gr.setStroke(getFillColor()); // Устанавливаем цвет контура
+        gr.setLineWidth(getStrokeWidth());
+
+        double startX = getX();
+        double startY = getY();
+        double endX = startX + length;
+        double endY = startY;
+
+        gr.strokeLine(startX, startY, endX, endY);
+    }
+
+    @Override
     public Shape cloneShape() {
         Line clone = new Line();
         clone.relocate(getX(), getY());
-        clone.setStroke(getStroke());
+        clone.setStroke(getFillColor());
         clone.setStrokeWidth(getStrokeWidth());
         clone.setLength(getLength()); // Устанавливаем длину
         return clone;

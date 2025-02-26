@@ -21,16 +21,16 @@
             <ColorPicker fx:id="colorPicker"/>
 
             <Label text="Размер фигуры:"/>
-            <Slider fx:id="sizeSlider" min="10" max="200" value="100" showTickLabels="true" showTickMarks="true" majorTickUnit="50" minorTickCount="10"/>
+            <Slider fx:id="sizeSlider" min="10" max="200" value="60" showTickLabels="true" showTickMarks="true" majorTickUnit="50" minorTickCount="10"/>
 
             <Label text="Толщина контура:"/>
-            <Slider fx:id="strokeSlider" min="1" max="10" value="2" showTickLabels="true" showTickMarks="true" majorTickUnit="5" minorTickCount="1"/>
+            <Slider fx:id="strokeSlider" min="1" max="10" value="3" showTickLabels="true" showTickMarks="true" majorTickUnit="5" minorTickCount="1"/>
         </VBox>
     </left>
 
     <!-- Центральная панель с холстом -->
     <center>
-        <Canvas fx:id="myCanvas" width="500" height="400" style="-fx-border-color: gray; -fx-border-width: 2px;"/>
+        <Canvas fx:id="myCanvas" width="700" height="700" style="-fx-border-color: gray; -fx-border-width: 2px;"/>
     </center>
 
     <!-- Нижняя панель с ComboBox и кнопками -->

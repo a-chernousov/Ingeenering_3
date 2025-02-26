@@ -5,8 +5,13 @@ import javafx.scene.paint.Color;
 
 public class Angle extends Shape {
 
+//    public Angle() {
+//        super(25, 25, 10, Color.GRAY, Color.FIREBRICK);
+//    }
+
     public Angle() {
-        super(25, 25, 10, Color.GRAY, Color.FIREBRICK);
+        super();
+//        super(25, 25, 10, Color.GRAY, Color.FIREBRICK);
     }
 
     @Override

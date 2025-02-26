@@ -79,9 +79,10 @@ public class HelloController {
 
         // Инициализация ComboBox
         shapeSelector.setItems(FXCollections.observableArrayList(
-                "Круг", "Треугольник", "Прямоугольник", "Линия", "Угол"
+                "Круг", "Треугольник", "Квадрат", "Линия", "Угол"
         ));
 
+        shapeSelector.setValue("Круг");
         colorPicker.setOnAction(event -> changeShapeColor());
 
         // Инициализация слайдеров
@@ -149,8 +150,8 @@ public class HelloController {
             case "Треугольник":
                 shape = new Triangle();
                 break;
-            case "Прямоугольник":
-                shape = new Square(x, y, 100, 2, Color.BLACK);
+            case "Квадрат":
+                shape = new Square();
                 break;
             case "Линия":
                 shape = new Line();
@@ -285,8 +286,5 @@ public class HelloController {
             redrawCanvas(); // Перерисовываем холст
         }
     }
-
-
-
 
 }

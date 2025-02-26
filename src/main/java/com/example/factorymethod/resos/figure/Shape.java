@@ -11,13 +11,21 @@ public class Shape {
     private Color stroke;
     private Color fillColor;
     private boolean isDraggable = true;
-
+    // свои данные, если это надо
     public Shape(double x, double y, double strokeWidth, Color strokeColor,  Color fillColor) {
         this.x = x;
         this.y = y;
         this.strokeWidth = strokeWidth;
         this.stroke = strokeColor;
         this.fillColor = fillColor;
+    }
+
+    public Shape(){
+        this.x = 60;
+        this.y = 60;
+        this.strokeWidth = 3;
+        this.stroke = Color.BLACK;
+        this.fillColor = Color.WHITE;
     }
     public void resize(double newSize) {
         // По умолчанию ничего не делаем

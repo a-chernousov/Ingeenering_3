@@ -9,7 +9,8 @@ public class ShapeFactory {
 
     static {
         shapeCreators.put(5, () -> new Polygon(5));
-        shapeCreators.put(4, () -> new Square(100, 100, 50, 2, javafx.scene.paint.Color.BLACK));
+//        shapeCreators.put(4, () -> new Square(100, 100, 50, 2, javafx.scene.paint.Color.BLACK));
+        shapeCreators.put(4, Square::new);
         shapeCreators.put(3, Triangle::new);
         shapeCreators.put(2, Angle::new);
         shapeCreators.put(1, Line::new);

@@ -4,6 +4,18 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
 public class Triangle extends Shape {
+
+    private double base = 100;
+    private double height = 100;
+
+//    public Triangle() {
+//        super(100, 100, 2, Color.BLACK, Color.GREEN);
+//    }
+
+    public Triangle() {
+        super();
+    }
+
     public double getBase() {
         return base;
     }
@@ -20,12 +32,6 @@ public class Triangle extends Shape {
         this.height = height;
     }
 
-    private double base = 100;
-    private double height = 100;
-
-    public Triangle() {
-        super(100, 100, 2, Color.BLACK, Color.GREEN);
-    }
     @Override
     public void resize(double newSize) {
         this.base = newSize;

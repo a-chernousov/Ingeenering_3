@@ -7,8 +7,12 @@ public class Circle extends Shape {
 
 
     private double radius = 50;
+//    public Circle() {
+//        super(140, 115, 2, Color.BLACK, Color.RED);
+//    }
+
     public Circle() {
-        super(140, 115, 2, Color.BLACK, Color.RED);
+        super();
     }
     @Override
     public void resize(double newSize) {

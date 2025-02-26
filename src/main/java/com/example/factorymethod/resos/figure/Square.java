@@ -5,20 +5,24 @@ import javafx.scene.paint.Color;
 
 public class Square extends Shape {
 
-    public double getSideLength() {
-        return sideLength;
-    }
-
-    private double sideLength;
+    private double sideLength = 60;
 
     public Square(double x, double y, double sideLength, double strokeWidth, Color strokeColor) {
         super(x, y, strokeWidth, strokeColor, Color.BLUE);
         this.sideLength = sideLength;
     }
 
+    public Square(){
+        super();
+    }
+    public double getSideLength() {
+        return sideLength;
+    }
+
     @Override
     public Shape cloneShape() {
         Square clone = new Square(getX(), getY(), getSideLength(), getStrokeWidth(), getStroke());
+//        Square clone = new Square();
         clone.setFillColor(getFillColor()); // Устанавливаем цвет заливки
         return clone;
     }
