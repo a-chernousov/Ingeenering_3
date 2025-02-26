@@ -10,34 +10,32 @@
 <?import javafx.scene.canvas.Canvas?>
 <?import javafx.scene.control.ColorPicker?>
 
-<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.factorymethod.HelloController">
-    <!-- Левая панель с ColorPicker и слайдерами -->
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.factorymethod.HelloController" prefHeight="400" prefWidth="600">
+    <!-- Левая панель -->
     <left>
         <VBox spacing="10">
             <padding>
-                <Insets top="10" right="10" bottom="10" left="10"/> <!-- Исправлено: явно создаём объект Insets -->
+                <Insets top="10" right="10" bottom="10" left="10"/>
             </padding>
             <Label text="Выберите цвет:"/>
             <ColorPicker fx:id="colorPicker"/>
-
             <Label text="Размер фигуры:"/>
             <Slider fx:id="sizeSlider" min="10" max="200" value="60" showTickLabels="true" showTickMarks="true" majorTickUnit="50" minorTickCount="10"/>
-
             <Label text="Толщина контура:"/>
             <Slider fx:id="strokeSlider" min="1" max="10" value="3" showTickLabels="true" showTickMarks="true" majorTickUnit="5" minorTickCount="1"/>
         </VBox>
     </left>
 
-    <!-- Центральная панель с холстом -->
+    <!-- Центральная панель -->
     <center>
-        <Canvas fx:id="myCanvas" width="700" height="700" style="-fx-border-color: gray; -fx-border-width: 2px;"/>
+        <Canvas fx:id="myCanvas" width="500" height="500" style="-fx-border-color: gray; -fx-border-width: 2px;"/>
     </center>
 
-    <!-- Нижняя панель с ComboBox и кнопками -->
+    <!-- Нижняя панель -->
     <bottom>
         <VBox spacing="10">
             <padding>
-                <Insets top="10" right="10" bottom="10" left="10"/> <!-- Исправлено: явно создаём объект Insets -->
+                <Insets top="10" right="10" bottom="10" left="10"/>
             </padding>
             <ComboBox fx:id="shapeSelector" promptText="Выберите фигуру"/>
             <Button text="Нарисовать" onAction="#onClickDraw"/>
