@@ -6,10 +6,6 @@ import javafx.scene.paint.Color;
 public class Line extends Shape {
     private double length = 100;
 
-//    public Line() {
-//        super(250, 200, 5, Color.BLACK, Color.TEAL);
-//    }
-
     public Line() {
         super();
     }
@@ -29,7 +25,7 @@ public class Line extends Shape {
 
     @Override
     public void draw(GraphicsContext gr) {
-        gr.setStroke(getFillColor()); // Устанавливаем цвет контура
+        gr.setStroke(getStroke()); // Используем цвет контура, а не заливки
         gr.setLineWidth(getStrokeWidth());
 
         double startX = getX();
@@ -44,7 +40,7 @@ public class Line extends Shape {
     public Shape cloneShape() {
         Line clone = new Line();
         clone.relocate(getX(), getY());
-        clone.setStroke(getFillColor());
+        clone.setStroke(getStroke()); // Копируем цвет контура
         clone.setStrokeWidth(getStrokeWidth());
         clone.setLength(getLength()); // Устанавливаем длину
         return clone;
@@ -55,7 +51,7 @@ public class Line extends Shape {
         // Простая проверка для линии
         double startX = getX();
         double startY = getY();
-        double endX = startX + 100;
+        double endX = startX + length; // Используем текущую длину линии
         double endY = startY;
 
         return x >= startX && x <= endX && y >= startY - 5 && y <= startY + 5;
