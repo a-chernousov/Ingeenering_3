@@ -11,7 +11,6 @@ public class Angle extends Shape {
 
     public Angle() {
         super();
-//        super(25, 25, 10, Color.GRAY, Color.FIREBRICK);
     }
 
     @Override
