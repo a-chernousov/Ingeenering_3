@@ -1,0 +1,2 @@
+after_success:
+  - bash <(curl -s https://github.com/a-chernousov/Ingeenering_3)
